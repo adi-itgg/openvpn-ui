@@ -1,0 +1,40 @@
+{{ template "layout/base.html" . }}
+
+{{define "head"}}
+<title>UI Activation</title>
+{{end}}
+
+{{define "body"}}
+<div class="card card-default">
+  <div class="card-header with-border">
+    <h3 class="card-title">OpenVPN UI Activation</h3>
+    <div class="pull-right card-tools">
+      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+        <i class="fa fa-minus"></i></button>
+    </div>
+  </div>
+  <!-- /.card-header -->
+  <!-- form start -->
+  <div class="card-body">
+    {{template "common/alert.html" .}}
+    <form role="form" action="{{urlfor "ActivationController.Post"}}" method="post">
+    <div class="card-body">
+
+      <div class="form-group">
+        <label class="col-form-label" for="name">Cookie</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-exchange"></i></span>
+          </div>
+          <input type="text" class="form-control" name="cookie" id="cookie" placeholder="Enter cookie">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 125px;">Activate</button>
+    </div>
+    <!-- /.card-body -->
+    </form>
+  </div>
+</div>
+<!-- /.card -->
+{{end}}

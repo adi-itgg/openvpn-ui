@@ -20,6 +20,10 @@ func (c *ActivationController) NestPrepare() {
 	}
 }
 
+func (c *ActivationController) Get() {
+	c.TplName = "activation.html"
+}
+
 func (c *ActivationController) Post() {
 	c.TplName = "activation.html"
 

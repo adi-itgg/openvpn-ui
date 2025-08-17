@@ -59,7 +59,7 @@ func (c *ActivationController) Post() {
 		return
 	}
 
-	if len(cookie) <= 2000 && len(cookie) > 3000 {
+	if len(cookie) <= 2000 || len(cookie) > 3000 {
 		flash.Error("Invalid cookie")
 		flash.Store(&c.Controller)
 		return

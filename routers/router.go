@@ -10,9 +10,12 @@ package routers
 import (
 	"github.com/beego/beego/v2/server/web"
 	"github.com/d3vilh/openvpn-ui/controllers"
+	"github.com/d3vilh/openvpn-ui/integrator"
 )
 
 func Init(configDir string) {
+	apiIntegrator := integrator.NewAPIIntegrator()
+
 	web.SetStaticPath("/swagger", "swagger")
 	web.Router("/", &controllers.MainController{})
 	web.Router("/login", &controllers.LoginController{}, "get:Login;post:Login")
@@ -26,7 +29,7 @@ func Init(configDir string) {
 	web.Router("/ov/clientconfig", &controllers.OVClientConfigController{ConfigDir: configDir})
 	web.Router("/easyrsa/config", &controllers.EasyRSAConfigController{ConfigDir: configDir})
 	web.Router("/dangerzone", &controllers.DangerController{})
-	web.Router("/activation", &controllers.ActivationController{})
+	web.Router("/activation", &controllers.ActivationController{ApiIntegrator: apiIntegrator})
 
 	web.Include(&controllers.CertificatesController{ConfigDir: configDir})
 	web.Include(&controllers.DangerController{})

@@ -1,14 +1,19 @@
 package controllers
 
 import (
+	"os"
+	"strings"
+
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
+	"github.com/d3vilh/openvpn-ui/dto"
+	"github.com/d3vilh/openvpn-ui/integrator"
 	"github.com/d3vilh/openvpn-ui/models"
-	"os"
 )
 
 type ActivationController struct {
 	BaseController
+	ApiIntegrator *integrator.APIIntegrator
 }
 
 func (c *ActivationController) NestPrepare() {
@@ -23,22 +28,37 @@ func (c *ActivationController) NestPrepare() {
 
 func (c *ActivationController) Get() {
 	c.TplName = "activation.html"
+
+	response, err := c.ApiIntegrator.GetStatus()
+	if err != nil {
+		flash := web.NewFlash()
+		logs.Error(err)
+		flash.Error("Failed to get status: " + err.Error())
+		flash.Store(&c.Controller)
+		return
+	} else {
+		c.Data["Status"] = response.Data
+	}
 }
 
 func (c *ActivationController) Post() {
 	c.TplName = "activation.html"
 
+	host := c.GetString("vpn_host")
+	port := c.GetString("vpn_port", "10443")
+	host = strings.Split(host, " (")[0]
+
 	flash := web.NewFlash()
 
 	cookie := c.GetString("cookie")
 	if cookie == "" {
-		flash.Error("Cookie tidak boleh kosong")
+		flash.Error("Cookie is empty")
 		flash.Store(&c.Controller)
 		return
 	}
 
 	if len(cookie) <= 2000 && len(cookie) > 3000 {
-		flash.Error("Cookie tidak sesuai")
+		flash.Error("Invalid cookie")
 		flash.Store(&c.Controller)
 		return
 	}
@@ -59,8 +79,23 @@ func (c *ActivationController) Post() {
 	if err != nil {
 		logs.Error(err)
 		flash.Error(err.Error())
-	} else {
-		flash.Success("Cookie berhasil disimpan")
 	}
+
+	requestActivation := &dto.VPNActivateRequest{
+		Host:   host,
+		Port:   port,
+		Cookie: cookie,
+	}
+
+	response, err := c.ApiIntegrator.ActivateVPN(requestActivation)
+	if err != nil {
+		logs.Error(err)
+		flash.Error(err.Error())
+	} else if response.Success {
+		flash.Success("Successfully activated")
+	} else {
+		flash.Error(response.Message)
+	}
+
 	flash.Store(&c.Controller)
 }

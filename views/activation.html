@@ -21,6 +21,20 @@
     <div class="card-body">
 
       <div class="form-group">
+          <label for="vpnHost">VPN Host</label>
+          <select class="form-control" id="vpnHost" name="vpn_host">
+              {{range $i, $server := .Servers}}
+              <option value="{{$server}}" {{if eq $i 0}}selected{{end}}>{{$server}}</option>
+              {{end}}
+          </select>
+      </div>
+
+      <div class="form-group">
+          <label for="vpnPort">VPN Port</label>
+          <input type="number" class="form-control" id="vpnPort" name="vpn_port" placeholder="Input Port" min="1" max="65535">
+      </div>
+
+      <div class="form-group">
         <label class="col-form-label" for="name">Cookie</label>
         <div class="input-group mb-3">
           <div class="input-group-prepend">

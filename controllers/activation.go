@@ -98,4 +98,15 @@ func (c *ActivationController) Post() {
 	}
 
 	flash.Store(&c.Controller)
+
+	r, err := c.ApiIntegrator.GetStatus()
+	if err != nil {
+		flash := web.NewFlash()
+		logs.Error(err)
+		flash.Error("Failed to get status: " + err.Error())
+		flash.Store(&c.Controller)
+		return
+	} else {
+		c.Data["Status"] = r.Data
+	}
 }

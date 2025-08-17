@@ -20,6 +20,15 @@
     <form role="form" action="{{urlfor "ActivationController.Post"}}" method="post">
     <div class="card-body">
 
+        <div class="form-group">
+            <label>Status VPN:</label>
+            {{if .Status.Active}}
+            <span class="badge badge-success">Active</span>
+            {{else}}
+            <span class="badge badge-danger">Not Active</span>
+            {{end}}
+        </div>
+
       <div class="form-group">
           <label for="vpnHost">VPN Host</label>
           <select class="form-control" id="vpnHost" name="vpn_host">

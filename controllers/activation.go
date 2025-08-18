@@ -100,4 +100,6 @@ func (c *ActivationController) Post() {
 	}
 
 	flash.Store(&c.Controller)
+
+	c.Get()
 }

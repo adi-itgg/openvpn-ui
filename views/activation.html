@@ -29,6 +29,15 @@
             {{end}}
         </div>
 
+        <div class="form-group">
+            <label for="logs">
+                <ion-icon name="document-text-outline"></ion-icon> Logs
+            </label>
+            <pre id="logBox" style="height:300px; overflow-y:auto; background:#000; color:#0f0; padding:10px; border-radius:5px;">
+                {{.Status.Logs}}
+            </pre>
+        </div>
+
       <div class="form-group">
           <label for="vpnHost">VPN Host</label>
           <select class="form-control" id="vpnHost" name="vpn_host">

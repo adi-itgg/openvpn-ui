@@ -28,17 +28,6 @@ func (c *ActivationController) NestPrepare() {
 
 func (c *ActivationController) Get() {
 	c.TplName = "activation.html"
-
-	response, err := c.ApiIntegrator.GetStatus()
-	if err != nil {
-		flash := web.NewFlash()
-		logs.Error(err)
-		flash.Error("Failed to get status: " + err.Error())
-		flash.Store(&c.Controller)
-		return
-	} else {
-		c.Data["Status"] = response.Data
-	}
 }
 
 func (c *ActivationController) Post() {

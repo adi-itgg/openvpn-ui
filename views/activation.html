@@ -21,7 +21,7 @@
     <div class="card-body">
 
         <div class="form-group">
-            <label>Status VPN:</label>
+            <label>Status VPN ({{.Status.Server}}):</label>
             {{if .Status.Active}}
             <span class="badge badge-success">Active</span>
             {{else}}
@@ -30,16 +30,8 @@
         </div>
 
         <div class="form-group">
-            <label>Current Server:</label>
-            <span class="badge badge-info">
-            <ion-icon name="cloud-outline"></ion-icon>
-                {{.Status.Server}}
-            </span>
-        </div>
-
-        <div class="form-group">
             <label for="logs">
-                <ion-icon name="document-text-outline"></ion-icon> Logs
+                Logs
             </label>
             <pre id="logBox" style="height:300px; overflow-y:auto; background:#000; color:#0f0; padding:10px; border-radius:5px;">
                 {{.Status.Logs}}

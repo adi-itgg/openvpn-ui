@@ -21,33 +21,24 @@
     <div class="card-body">
 
         <div class="form-group">
-            <label>Status VPN ({{.Status.Server}}):</label>
-            {{if .Status.Active}}
-            <span class="badge badge-success">Active</span>
-            {{else}}
-            <span class="badge badge-danger">Not Active</span>
-            {{end}}
+            <label>Status VPN:</label>
+            <span id="vpnStatus" class="badge badge-secondary">Loading...</span>
         </div>
 
         <div class="form-group">
-            <label for="logs">
-                Logs
-            </label>
+            <label for="logs">Logs</label>
             <pre id="logBox" style="height:300px; overflow-y:auto; background:#000; color:#0f0; padding:10px; border-radius:5px;">
-                {{.Status.Logs}}
+                Loading logs...
             </pre>
         </div>
 
-      <div class="form-group">
-          <label for="vpnHost">VPN Host</label>
-          <select class="form-control" id="vpnHost" name="vpn_host">
-              {{range $i, $server := .Status.Servers}}
-              <option value="{{$server}}" {{if eq $i 0}}selected{{end}}>{{$server}}</option>
-              {{end}}
-          </select>
-      </div>
+        <div class="form-group">
+            <label for="vpnHost">VPN Host</label>
+            <select class="form-control" id="vpnHost" name="vpn_host"></select>
+        </div>
 
-      <div class="form-group">
+
+        <div class="form-group">
           <label for="vpnPort">VPN Port</label>
           <input type="number" class="form-control" id="vpnPort" name="vpn_port" placeholder="Input Port" min="1" max="65535">
       </div>
@@ -70,3 +61,39 @@
 </div>
 <!-- /.card -->
 {{end}}
+<script>
+    function loadStatus() {
+        fetch("/status")
+            .then(resp => resp.json())
+            .then(data => {
+                // status
+                const statusBadge = document.getElementById("vpnStatus");
+                statusBadge.className = "badge " + (data.active ? "badge-success" : "badge-danger");
+                statusBadge.textContent = data.active ? "Active ("+data.server+")" : "Not Active ("+data.server+")";
+
+                // logs
+                const logBox = document.getElementById("logBox");
+                logBox.textContent = data.logs;
+                logBox.scrollTop = logBox.scrollHeight; // auto scroll
+
+                // servers dropdown
+                const select = document.getElementById("vpnHost");
+                select.innerHTML = ""; // clear
+                data.servers.forEach((s, i) => {
+                    let opt = document.createElement("option");
+                    opt.value = s;
+                    opt.textContent = s;
+                    if (i === 0) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            })
+            .catch(err => {
+                document.getElementById("vpnStatus").textContent = "Error loading status";
+                console.error(err);
+            });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadStatus);
+
+    setInterval(loadStatus, 5000);
+</script>

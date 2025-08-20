@@ -30,6 +30,7 @@ func Init(configDir string) {
 	web.Router("/easyrsa/config", &controllers.EasyRSAConfigController{ConfigDir: configDir})
 	web.Router("/dangerzone", &controllers.DangerController{})
 	web.Router("/activation", &controllers.ActivationController{ApiIntegrator: apiIntegrator})
+	web.Router("/status", &controllers.StatusController{ApiIntegrator: apiIntegrator})
 
 	web.Include(&controllers.CertificatesController{ConfigDir: configDir})
 	web.Include(&controllers.DangerController{})
